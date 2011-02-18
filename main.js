@@ -7,6 +7,7 @@ if (process.getuid() != 0) {
 
 var docroot = '/'
 
+// Check if we have enough arguments and set the docroot
 if (process.argv.length < 3) {
   throw 'Usage: sudo node main.js <serverroot>';
   process.exit(0);
@@ -23,14 +24,17 @@ var sys = require("sys"),
     fs = require("fs"),
     log = require('util').log;
 
+// Our server function
 http.createServer(function serverHandler(request, response) {  
     // Parse the url so we can use it
     var uri = url.parse(request.url).pathname;
     
     log('Request for ' + uri);
  
+ 	// This will contain our realpath (Resolve any relative path stuf like ..)
     var realpath;
     
+    // We try because hte fs.realpathSync might error on non-existing stuff
     try {
       realpath = fs.realpathSync(docroot + uri);
     } catch (e) {
@@ -41,6 +45,7 @@ http.createServer(function serverHandler(request, response) {
     // Serve files if they're in the docroot
     if ((new RegExp('^' + docroot)).exec(realpath))
     {
+      // Read the file and write it to the client if it was found	
       fs.readFile(realpath, 'binary', function(err, file) {
         if (err) {
           log(err);
@@ -55,6 +60,7 @@ http.createServer(function serverHandler(request, response) {
       });
     }
     else {
+    	// The file was outside docroot, just act dumb and tell the client we couldn't find it
         response.writeHead(404);
         response.end('404 - Not Found');
     }

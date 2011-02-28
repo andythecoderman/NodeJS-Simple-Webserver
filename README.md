@@ -7,7 +7,8 @@ Usage: sudo node main.js \<documentroot\>
 	
 ## Todo
 
-* Update to NodeJS 0.4.0
+* Update to NodeJS 0.4.0 - Done, works with 0.5.0-pre as of (February 28th 2011)
 * Implement optional directory listing
+* Add a config file
 
 [1]: http://nodejs.org/ "Node.JS"
